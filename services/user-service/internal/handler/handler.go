@@ -10,6 +10,9 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/sig-agro/services/user-service/internal/repository"
 
+	"google.golang.org/grpc/codes"
+    "google.golang.org/grpc/status"
+
 	pb "github.com/sig-agro/api/proto/user"
 )
 
@@ -51,48 +54,48 @@ func (s *UserService) Register(ctx context.Context, req *pb.RegisterRequest) (*p
 }
 
 func (s *UserService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
-	log.Printf("Login request for email: %s\n", req.Email)
+    log.Printf("Login request for email: %s\n", req.Email)
 
-	userID, storedHash, err := s.repo.GetUserByEmail(ctx, req.Email)
-	if err != nil {
-		return &pb.LoginResponse{Message: "Invalid credentials"}, err
-	}
+    userID, storedHash, err := s.repo.GetUserByEmail(ctx, req.Email)
+    if err != nil {
+        return nil, status.Error(codes.Unauthenticated, "Invalid credentials")
+    }
 
-	// Verify password
-	hash := sha256.Sum256([]byte(req.Password))
-	passwordHash := fmt.Sprintf("%x", hash)
+    // Verify password
+    hash := sha256.Sum256([]byte(req.Password))
+    passwordHash := fmt.Sprintf("%x", hash)
 
-	if passwordHash != storedHash {
-		return &pb.LoginResponse{Message: "Invalid credentials"}, fmt.Errorf("invalid password")
-	}
+    if passwordHash != storedHash {
+        return nil, status.Error(codes.Unauthenticated, "Invalid credentials")
+    }
 
-	// Get user roles
-	roles, err := s.repo.GetUserRoles(ctx, userID)
-	if err != nil {
-		log.Printf("Error fetching roles: %v\n", err)
-		roles = []string{"user"}
-	}
+    // Get user roles
+    roles, err := s.repo.GetUserRoles(ctx, userID)
+    if err != nil {
+        log.Printf("Error fetching roles: %v\n", err)
+        roles = []string{"user"}
+    }
 
-	// Generate JWT token
-	expiresAt := time.Now().Add(time.Hour).Unix()
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id": userID,
-		"email":   req.Email,
-		"roles":   roles,
-		"exp":     expiresAt,
-	})
+    // Generate JWT token
+    expiresAt := time.Now().Add(time.Hour).Unix()
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+        "user_id": userID,
+        "email":   req.Email,
+        "roles":   roles,
+        "exp":     expiresAt,
+    })
 
-	tokenString, err := token.SignedString([]byte(s.jwtSecret))
-	if err != nil {
-		return &pb.LoginResponse{Message: "Error generating token"}, err
-	}
+    tokenString, err := token.SignedString([]byte(s.jwtSecret))
+    if err != nil {
+        return nil, status.Error(codes.Internal, "Error generating token")
+    }
 
-	return &pb.LoginResponse{
-		UserId:    userID,
-		Email:     req.Email,
-		Token:     tokenString,
-		ExpiresAt: expiresAt,
-	}, nil
+    return &pb.LoginResponse{
+        UserId:    userID,
+        Email:     req.Email,
+        Token:     tokenString,
+        ExpiresAt: expiresAt,
+    }, nil
 }
 
 func (s *UserService) ValidateToken(ctx context.Context, req *pb.ValidateTokenRequest) (*pb.ValidateTokenResponse, error) {
