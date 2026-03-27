@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package producer;
 
-option go_package = "github.com/sig-agro/api/proto/producer;producer";
+option go_package = "./producer;producer";
 
 service ProducerService {
   rpc CreateProducer(CreateProducerRequest) returns (CreateProducerResponse);

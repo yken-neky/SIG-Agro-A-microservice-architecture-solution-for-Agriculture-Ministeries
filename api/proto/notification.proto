@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package notification;
 
-option go_package = "github.com/sig-agro/api/proto/notification;notification";
+option go_package = "./notification;notification";
 
 service NotificationService {
   rpc SendNotification(SendNotificationRequest) returns (SendNotificationResponse);

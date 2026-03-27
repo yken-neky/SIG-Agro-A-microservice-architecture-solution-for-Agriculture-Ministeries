@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package production;
 
-option go_package = "github.com/sig-agro/api/proto/production;production";
+option go_package = "./production;production";
 
 service ProductionService {
   rpc RecordActivity(RecordActivityRequest) returns (RecordActivityResponse);

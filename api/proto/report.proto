@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package report;
 
-option go_package = "github.com/sig-agro/api/proto/report;report";
+option go_package = "./report;report";
 
 service ReportService {
   rpc GenerateReport(GenerateReportRequest) returns (GenerateReportResponse);

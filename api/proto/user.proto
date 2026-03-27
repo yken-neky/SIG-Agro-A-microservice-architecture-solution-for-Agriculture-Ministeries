@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package user;
 
-option go_package = "github.com/sig-agro/api/proto/user;user";
+option go_package = "./user;user";
 
 service UserService {
   rpc Register(RegisterRequest) returns (RegisterResponse);

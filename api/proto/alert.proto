@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package alert;
 
-option go_package = "github.com/sig-agro/api/proto/alert;alert";
+option go_package = "./alert;alert";
 
 service AlertService {
   rpc CreateAlert(CreateAlertRequest) returns (CreateAlertResponse);

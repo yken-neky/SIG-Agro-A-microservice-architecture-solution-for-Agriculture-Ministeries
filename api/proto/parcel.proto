@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package parcel;
 
-option go_package = "github.com/sig-agro/api/proto/parcel;parcel";
+option go_package = "./parcel;parcel";
 
 service ParcelService {
   rpc CreateParcel(CreateParcelRequest) returns (CreateParcelResponse);
