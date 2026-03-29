@@ -17,48 +17,26 @@ jobs:
       with:
         go-version: '1.20'
 
-    # ---------- Alert Service ----------
-    - name: Tidy Alert Service
-      run: cd services/alert-service && go mod tidy
     - name: Build Alert Service
       run: cd services/alert-service && go build -v ./cmd/server/...
 
-    # ---------- Notification Service ----------
-    - name: Tidy Notification Service
-      run: cd services/notification-service && go mod tidy
     - name: Build Notification Service
       run: cd services/notification-service && go build -v ./cmd/server/...
 
-    # ---------- Parcel Service ----------
-    - name: Tidy Parcel Service
-      run: cd services/parcel-service && go mod tidy
     - name: Build Parcel Service
       run: cd services/parcel-service && go build -v ./cmd/server/...
 
-    # ---------- Producer Service ----------
-    - name: Tidy Producer Service
-      run: cd services/producer-service && go mod tidy
     - name: Build Producer Service
       run: cd services/producer-service && go build -v ./cmd/server/...
 
-    # ---------- Production Service ----------
-    - name: Tidy Production Service
-      run: cd services/production-service && go mod tidy
     - name: Build Production Service
       run: cd services/production-service && go build -v ./cmd/server/...
 
-    # ---------- Report Service ----------
-    - name: Tidy Report Service
-      run: cd services/report-service && go mod tidy
     - name: Build Report Service
       run: cd services/report-service && go build -v ./cmd/server/...
 
-    # ---------- User Service ----------
-    - name: Tidy User Service
-      run: cd services/user-service && go mod tidy
     - name: Build User Service
       run: cd services/user-service && go build -v ./cmd/server/...
 
-    # ---------- Build All -------------
     - name: Build All Services
       run: make build
